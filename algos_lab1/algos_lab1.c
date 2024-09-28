@@ -32,15 +32,15 @@ int add_path(Node* root, const char* path) {
 
     folder_name = strtok(path_copy, "\\");
     while (folder_name != NULL) {
-        int found = 0;
+        int found_name = 0;
         for (int i = 0; i < current->child_count; i++) {
             if (strcmp(current->children[i]->name, folder_name) == 0) {
                 current = current->children[i];
-                found = 1;
+                found_name = 1;
                 break;
             }
         }
-        if (!found) {
+        if (!found_name) {
             Node* new_child = create_node(folder_name);
             current->children[current->child_count] = new_child;
             current->child_count++;
