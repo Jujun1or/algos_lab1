@@ -59,17 +59,18 @@ int compare(const void* a, const void* b) {
     return strcmp(node_a->name, node_b->name);
 }
 
-void print_tree(Node* node, int level) {
+void print_tree(Node* node, int level, FILE * filename) {
+    
     if (node == NULL) return;
 
     qsort(node->children, node->child_count, sizeof(Node*), compare);
 
     for (int i = 0; i < node->child_count; i++) {
         for (int j = 0; j < level; j++) {
-            printf(" "); 
+            fprintf(filename, " ");
         }
-        printf("%s\n", node->children[i]->name);
-        print_tree(node->children[i], level + 1); 
+        fprintf(filename, "%s\n", node->children[i]->name);
+        print_tree(node->children[i], level + 1, filename); 
     }
 }
 
@@ -83,11 +84,13 @@ void free_tree(Node* node) {
 
 int main() {
     FILE* input_file = fopen("input.txt", "r");
+    FILE* output_file = fopen("output.txt", "w");
 
-    if (!input_file) {
+    if (!input_file || !output_file) {
         perror("Ошибка открытия файла\n");
         exit(1);
     }
+
 
     int N;
     fscanf(input_file, "%d\n", &N);
@@ -107,9 +110,10 @@ int main() {
         add_path(tree, path);
     }
 
-    fclose(input_file);
+    print_tree(tree, 0, output_file); 
 
-    print_tree(tree, 0); 
+    fclose(input_file);
+    fclose(output_file);
 
     free_tree(tree);
     return 0;
